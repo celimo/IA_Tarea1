@@ -29,18 +29,16 @@ model = keras.Sequential([
     ])
 
 # ============================ Se compila el modelo ============================
-
 model.compile(optimizer='adam',                           #se seleciona el optimizador del modelo
               loss='sparse_categorical_crossentropy',     #se seleciona la funcion de perdida
               metrics=['accuracy'])                       #se pide el dato de precision
 
-
 #========================== Se entrena el modelo con los datos ================
 
-model.fit(train_data,train_labels,epochs=100)   #se entrena el modelo con los datos
+model.fit(train_data, train_labels, epochs = 100)   #se entrena el modelo con los datos
                                                 #se seleciona la cantidad de iteraciones
 
 #=========================== Se prueba el modelo con los datos ================
 
-test_loss,test_acc= model.evaluate(test_data, test_labels, verbose=1)   #se prueba el modelo y se imprime la precision
+test_loss, test_acc = model.evaluate(test_data, test_labels, verbose = 1)   #se prueba el modelo y se imprime la precision
 print('Test accuracy:', test_acc)
