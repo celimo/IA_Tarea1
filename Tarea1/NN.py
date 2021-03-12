@@ -5,8 +5,8 @@ import numpy as np           #importa la libreia pandas necesaria para abrir los
 
 #========================== datos del modelo ==================================
 
-datos_train = pd.read_csv('train.csv',header=0)   #carga los datos de entrenamiento
-datos_test = pd.read_csv('test.csv',header=0)     #carga los datos de validacion
+datos_train = pd.read_csv('train.csv', header = 0)   #carga los datos de entrenamiento
+datos_test = pd.read_csv('test.csv', header = 0)     #carga los datos de validacion
 
 train_labels = datos_train.pop('Class')      #separa las etiquetas de los datos de entrenamiento
 train_data = datos_train
@@ -35,10 +35,16 @@ model.compile(optimizer='adam',                           #se seleciona el optim
 
 #========================== Se entrena el modelo con los datos ================
 
-model.fit(train_data, train_labels, epochs = 100)   #se entrena el modelo con los datos
+training = model.fit(train_data, train_labels, epochs = 5, validation_data = (test_data,test_labels))   #se entrena el modelo con los datos
                                                 #se seleciona la cantidad de iteraciones
 
 #=========================== Se prueba el modelo con los datos ================
+
+print("Fin entrenamiento")
+
+matriz = training.history
+
+print(matriz)
 
 test_loss, test_acc = model.evaluate(test_data, test_labels, verbose = 1)   #se prueba el modelo y se imprime la precision
 print('Test accuracy:', test_acc)
