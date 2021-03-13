@@ -1,50 +1,97 @@
-import tensorflow as tf      #importa la libreria de tensorflow para realizar el modelo
-from tensorflow import keras #importa la libreria de keras para realizar el modelo
-import pandas as pd          #importa la libreia pandas necesaria para abrir los datos
-import numpy as np           #importa la libreia pandas necesaria para abrir los datos
+# Se importan librerias utilizadas en el código
+from tensorflow import keras     # Realizar el modelo de la NN
+import pandas as pd              # Abrir los datos
+import matplotlib.pyplot as plt  # Graficar curvas de validación
 
-#========================== datos del modelo ==================================
+# ================ Cargar datos a utilizar ================
 
-datos_train = pd.read_csv('train.csv', header = 0)   #carga los datos de entrenamiento
-datos_test = pd.read_csv('test.csv', header = 0)     #carga los datos de validacion
+datos_train = pd.read_csv('train.csv', header=0)  # Entrenamiento
+datos_test = pd.read_csv('test.csv', header=0)    # Validacion
 
-train_labels = datos_train.pop('Class')      #separa las etiquetas de los datos de entrenamiento
-train_data = datos_train
+# =============== Dar formato a los datos de entrenamiento  ===============
 
-test_labels = datos_test.pop('Class')        #separa las etiquetas de los datos de validacion
-test_data = datos_test
+train_labels = datos_train.pop('Class')  # Separar etiquetes
+train_data = datos_train                 # Asignar datos de entrenamiento
 
-train_data = train_data/5 #se ajustan los datos para que esten entre 0 y 1
-test_data = test_data/5
+# =============== Dar formato a los datos de validación  ===============
 
-# =========================== clasificaciones  =================================
-class_names = ['Move-Forward','Slight-Right-Turn',
-             'Sharp-Right-Turn','Slight-Left-Turn']
+test_labels = datos_test.pop('Class')  # Separar etiquetas
+test_data = datos_test                 # Asignar datos de validación
 
-# ============================ Se crea el modelo ===============================
+# =============== Ajustar el valor de los datos ===============
+# Los datos deben estar entre 0 y 1, ya que se trabaja con probabilidades
+
+train_data = train_data/5  # Se ajustan los datos de entrenamiento
+test_data = test_data/5    # Se ajustan los datos de validación
+
+# ================ clasificaciones  ================
+
+class_names = ['Move-Forward', 'Slight-Right-Turn',
+               'Sharp-Right-Turn', 'Slight-Left-Turn']
+
+# ================ Se crea el modelo ================
+# Se trabaja con 3 capas: 1 de entrada, 1 oculta y 1 de salida
+# 4 entradas
+# 26 percetrones en la capa oculta
+# 4 clasificaciones en la salida
+
 model = keras.Sequential([
-    keras.layers.Flatten(input_shape = (1,4)),  #input layer
-    keras.layers.Dense(26,activation = 'sigmoid'), #hidden layer
-    keras.layers.Dense(4,activation ='softmax')   #output layer
+    keras.layers.Flatten(input_shape=(1, 4)),      # input layers
+    keras.layers.Dense(26, activation='sigmoid'),  # hidden layers
+    keras.layers.Dense(4, activation='softmax')    # output layers
     ])
 
-# ============================ Se compila el modelo ============================
-model.compile(optimizer='adam',                           #se seleciona el optimizador del modelo
-              loss='sparse_categorical_crossentropy',     #se seleciona la funcion de perdida
-              metrics=['accuracy'])                       #se pide el dato de precision
+# ================ Se compila el modelo ================
+# Se trabaja con el optimizador "adaptive moment estimation (ADAM)"
+# La función de pérdida se configura para trabajar en clasificación
+# Se va a medir la precisión de los datos
+# El objeto optimizador indica el tipo con su tasa de aprendizaje
 
-#========================== Se entrena el modelo con los datos ================
+optimizador = keras.optimizers.Adam(learning_rate=0.01)
 
-training = model.fit(train_data, train_labels, epochs = 5, validation_data = (test_data,test_labels))   #se entrena el modelo con los datos
-                                                #se seleciona la cantidad de iteraciones
+# Se compila el modelo
+# optimizer: Optimizador a usar
+# loss: tipo de función de pérdida
+# metrics: la métrica a evaluar durante el entrenamiento y el testing
 
-#=========================== Se prueba el modelo con los datos ================
+model.compile(optimizer=optimizador,
+              loss='sparse_categorical_crossentropy',
+              metrics=['accuracy'])
+
+# ================ Se entrena el modelo con los datos ================
+
+iteration = 200  # Cantidad de iteraciones para el entrenamiento
+CantVal = int(iteration * 0.1)  # Cantidad de validaciones
+freqVal = int(iteration / CantVal)  # Frecuencia de las validaciones
+
+# Se inicia  el entrenamiento de la red
+# Los primeros parámetros son los datos de entrenamiento y las clasificaciones
+# epochs: iteraciones del entrenamiento
+# validation_data: datos de validación (datos, clasificación)
+# validation_freq: cada cierta freqVal de iteraciones se hace la validación
+
+training = model.fit(train_data, train_labels,
+                     epochs=iteration,
+                     validation_data=(test_data, test_labels),
+                     validation_freq=freqVal)
 
 print("Fin entrenamiento")
 
-matriz = training.history
+# ================ Configuración para realizar la gráfica ================
 
-print(matriz)
+loss = training.history['loss']  # Datos de la perida de entrenamiento
+val_loss = training.history['val_loss']  # Datos de la perdida de validación
+x_loss = []  # Datos eje x para la curva de etrenamiento
+x_val = []  # Datos eje x para la curva de validación
 
-test_loss, test_acc = model.evaluate(test_data, test_labels, verbose = 1)   #se prueba el modelo y se imprime la precision
-print('Test accuracy:', test_acc)
+for i in range(iteration):  # Se agregan datos al eje x de entrenamiento
+    x_loss.append(i + 1)
+for i in range(CantVal):  # Se agregan datos al eje x de validación
+    x_val.append((i + 1) * freqVal)
+
+plt.xlabel("Iteración")
+plt.ylabel("Error")
+plt.plot(x_loss, loss, label="Pérdida de entrenamiento")
+plt.plot(x_val, val_loss, label="Pérdida de validación")
+plt.legend()
+plt.show()
