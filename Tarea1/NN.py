@@ -2,7 +2,6 @@
 from tensorflow import keras     # Realizar el modelo de la NN
 import pandas as pd              # Abrir los datos
 import matplotlib.pyplot as plt  # Graficar curvas de validación
-import os                        # Guardar datos
 from mlxtend.plotting import plot_confusion_matrix  # Para matriz confusion
 from sklearn.metrics import confusion_matrix        # Para matriz confusion
 
@@ -112,3 +111,11 @@ for i in range(len(val_loss)):
 file.close()
 
 # ================ Crear matriz de confusión ================
+
+# mat = confusion_matrix(datos_train, train_labels, )
+""" plot_confusion_matrix(conf_mat=mat,
+                      figsize=(8, 8),
+                      class_names=class_names,
+                      show_normed=True)
+"""
+# Esta es la sintaxis para la matriz de confusión, falta acomodar los datos para la prueba
