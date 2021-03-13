@@ -2,6 +2,9 @@
 from tensorflow import keras     # Realizar el modelo de la NN
 import pandas as pd              # Abrir los datos
 import matplotlib.pyplot as plt  # Graficar curvas de validación
+import os                        # Guardar datos
+from mlxtend.plotting import plot_confusion_matrix  # Para matriz confusion
+from sklearn.metrics import confusion_matrix        # Para matriz confusion
 
 # ================ Cargar datos a utilizar ================
 
@@ -37,7 +40,7 @@ class_names = ['Move-Forward', 'Slight-Right-Turn',
 
 model = keras.Sequential([
     keras.layers.Flatten(input_shape=(1, 4)),      # input layers
-    keras.layers.Dense(26, activation='sigmoid'),  # hidden layers
+    keras.layers.Dense(4, activation='sigmoid'),  # hidden layers
     keras.layers.Dense(4, activation='softmax')    # output layers
     ])
 
@@ -95,3 +98,17 @@ plt.plot(x_loss, loss, label="Pérdida de entrenamiento")
 plt.plot(x_val, val_loss, label="Pérdida de validación")
 plt.legend()
 plt.show()
+
+# ================ Guardar curvas de périda ================
+
+file = open("curvas/LossTrain.txt", "w")
+for i in range(len(loss)):
+    file.write(str(x_loss[i]) + " " + str(loss[i]) + "\n")
+file.close()
+
+file = open("curvas/ValidTrain.txt", "w")
+for i in range(len(val_loss)):
+    file.write(str(x_val[i]) + " " + str(val_loss[i]) + "\n")
+file.close()
+
+# ================ Crear matriz de confusión ================
