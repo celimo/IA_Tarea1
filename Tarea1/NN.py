@@ -1,14 +1,16 @@
 # Se importan librerias utilizadas en el código
+import numpy as np
 from tensorflow import keras     # Realizar el modelo de la NN
 import pandas as pd              # Abrir los datos
 import matplotlib.pyplot as plt  # Graficar curvas de validación
+from sklearn.metrics import accuracy_score          # Para la validación
 from mlxtend.plotting import plot_confusion_matrix  # Para matriz confusion
 from sklearn.metrics import confusion_matrix        # Para matriz confusion
 
 # ================ Cargar datos a utilizar ================
 
-datos_train = pd.read_csv('train.csv', header=0)  # Entrenamiento
-datos_test = pd.read_csv('test.csv', header=0)    # Validacion
+datos_train = pd.read_csv('datos/train.csv', header=0)        # Entrenamiento
+datos_test = pd.read_csv('datos/test.csv', header=0)          # Validacion
 
 # =============== Dar formato a los datos de entrenamiento  ===============
 
@@ -38,9 +40,9 @@ class_names = ['Move-Forward', 'Slight-Right-Turn',
 # 4 clasificaciones en la salida
 
 model = keras.Sequential([
-    keras.layers.Flatten(input_shape=(1, 4)),      # input layers
+    keras.layers.Flatten(input_shape=(4,)),       # input layers
     keras.layers.Dense(4, activation='sigmoid'),  # hidden layers
-    keras.layers.Dense(4, activation='softmax')    # output layers
+    keras.layers.Dense(4, activation='softmax')   # output layers
     ])
 
 # ================ Se compila el modelo ================
@@ -62,20 +64,22 @@ model.compile(optimizer=optimizador,
 
 # ================ Se entrena el modelo con los datos ================
 
-iteration = 200  # Cantidad de iteraciones para el entrenamiento
+iteration = 20  # Cantidad de iteraciones para el entrenamiento
 CantVal = int(iteration * 0.1)  # Cantidad de validaciones
 freqVal = int(iteration / CantVal)  # Frecuencia de las validaciones
 
 # Se inicia  el entrenamiento de la red
 # Los primeros parámetros son los datos de entrenamiento y las clasificaciones
 # epochs: iteraciones del entrenamiento
-# validation_data: datos de validación (datos, clasificación)
+# validation_split: Utiliza un 30% de los datos para validación
 # validation_freq: cada cierta freqVal de iteraciones se hace la validación
+# verbose: No se muestra todas las iteraciones del entrenamiento
 
-training = model.fit(train_data, train_labels,
+training = model.fit(train_data, train_labels.to_numpy(),
                      epochs=iteration,
-                     validation_data=(test_data, test_labels),
-                     validation_freq=freqVal)
+                     validation_split=0.3,
+                     validation_freq=freqVal,
+                     verbose=0)
 
 print("Fin entrenamiento")
 
@@ -112,10 +116,13 @@ file.close()
 
 # ================ Crear matriz de confusión ================
 
-# mat = confusion_matrix(datos_train, train_labels, )
-""" plot_confusion_matrix(conf_mat=mat,
-                      figsize=(8, 8),
+prob_matrix = model.predict(test_data)
+pred_labels = np.argmax(prob_matrix, axis=-1)
+
+mat = confusion_matrix(pred_labels, test_labels)
+plot_confusion_matrix(conf_mat=mat,
+                      figsize=(6, 6),
                       class_names=class_names,
                       show_normed=True)
-"""
 # Esta es la sintaxis para la matriz de confusión, falta acomodar los datos para la prueba
+plt.show()
