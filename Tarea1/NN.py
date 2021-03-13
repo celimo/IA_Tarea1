@@ -1,9 +1,8 @@
 # Se importan librerias utilizadas en el código
-import numpy as np
 from tensorflow import keras     # Realizar el modelo de la NN
 import pandas as pd              # Abrir los datos
 import matplotlib.pyplot as plt  # Graficar curvas de validación
-from sklearn.metrics import accuracy_score          # Para la validación
+import numpy as np               # Para determinar las clases
 from mlxtend.plotting import plot_confusion_matrix  # Para matriz confusion
 from sklearn.metrics import confusion_matrix        # Para matriz confusion
 
@@ -64,7 +63,7 @@ model.compile(optimizer=optimizador,
 
 # ================ Se entrena el modelo con los datos ================
 
-iteration = 20  # Cantidad de iteraciones para el entrenamiento
+iteration = 200  # Cantidad de iteraciones para el entrenamiento
 CantVal = int(iteration * 0.1)  # Cantidad de validaciones
 freqVal = int(iteration / CantVal)  # Frecuencia de las validaciones
 
@@ -115,6 +114,11 @@ for i in range(len(val_loss)):
 file.close()
 
 # ================ Crear matriz de confusión ================
+# prob_matrix: Se calcula la probabilidad que el dato de entrada corresponda
+#               a cierta clasificación
+# pred_labels: Se obtiene el indice donde se encuentra la mayor probabilidad
+#              este array es el que es comparado con el test_labels para
+#              la matriz de confusión
 
 prob_matrix = model.predict(test_data)
 pred_labels = np.argmax(prob_matrix, axis=-1)
@@ -124,5 +128,5 @@ plot_confusion_matrix(conf_mat=mat,
                       figsize=(6, 6),
                       class_names=class_names,
                       show_normed=True)
-# Esta es la sintaxis para la matriz de confusión, falta acomodar los datos para la prueba
+
 plt.show()
