@@ -29,8 +29,8 @@ test_data = test_data/5    # Se ajustan los datos de validación
 
 # ================ clasificaciones  ================
 
-class_names = ['Move-Forward', 'Slight-Right-Turn',
-               'Sharp-Right-Turn', 'Slight-Left-Turn']
+class_names = ['Move-F', 'Slight-RT',
+               'Sharp-RT', 'Slight-LT']
 
 # ================ Se crea el modelo ================
 # Se trabaja con 3 capas: 1 de entrada, 1 oculta y 1 de salida
@@ -127,6 +127,20 @@ mat = confusion_matrix(pred_labels, test_labels)
 plot_confusion_matrix(conf_mat=mat,
                       figsize=(6, 6),
                       class_names=class_names,
-                      show_normed=True)
+                      show_normed=True,
+                      cmap=plt.cm.Blues)
 
 plt.show()
+
+# ================ Guardar los pesos del entrenamiento ================
+# Se guardan los pesos para comparar si mejoraron el resultado
+
+model.save_weights('model/weights.h5',
+                  overwrite=True)
+
+# ================ Guardar el modelo utilizado ================
+# El modelo se guarda para comparar los resultados y en el cas que Sea
+# mejor al anterior se guarda
+
+model.save('model/my_model.h5')  # Se guarda con una extensión h.5
+del model                        # Se borra el modelo utilizado
