@@ -35,7 +35,7 @@ class_names = ['Move-F', 'Slight-RT',
 # ================ Se crea el modelo ================
 # Se trabaja con 3 capas: 1 de entrada, 1 oculta y 1 de salida
 # 4 entradas
-# 26 percetrones en la capa oculta
+# 4 percetrones en la capa oculta (este dato puede variar)
 # 4 clasificaciones en la salida
 
 model = keras.Sequential([
@@ -45,13 +45,15 @@ model = keras.Sequential([
     ])
 
 # ================ Se compila el modelo ================
-# Se trabaja con el optimizador "adaptive moment estimation (ADAM)"
+# Se trabaja con el optimizador "adaptive moment estimation (ADAM)" y con
+# el optimizador "Root Mean Square Prop (RMSprop)"
 # La función de pérdida se configura para trabajar en clasificación
 # Se va a medir la precisión de los datos
-# El objeto optimizador indica el tipo con su tasa de aprendizaje
+# El objeto optimizador indica el tipo con su tasa de aprendizaje y
+# el momento a utilizar, en el caso del Adam, el momento es el beta_1
 
-#optimizador = keras.optimizers.RMSprop(learning_rate=0.01,
-#                                       momentum=0.0)
+# optimizador = keras.optimizers.RMSprop(learning_rate=0.01,
+#                                        momentum=0.9)
 
 optimizador = keras.optimizers.Adam(learning_rate=0.1,
                                     beta_1=0.8)
@@ -67,7 +69,7 @@ model.compile(optimizer=optimizador,
 
 # ================ Se entrena el modelo con los datos ================
 
-iteration = 400  # Cantidad de iteraciones para el entrenamiento
+iteration = 200  # Cantidad de iteraciones para el entrenamiento
 CantVal = int(iteration * 0.1)  # Cantidad de validaciones
 freqVal = int(iteration / CantVal)  # Frecuencia de las validaciones
 
@@ -76,7 +78,7 @@ freqVal = int(iteration / CantVal)  # Frecuencia de las validaciones
 # epochs: iteraciones del entrenamiento
 # validation_split: Utiliza un 30% de los datos para validación
 # validation_freq: cada cierta freqVal de iteraciones se hace la validación
-# verbose: No se muestra todas las iteraciones del entrenamiento
+# verbose: (0) No se muestran las iteraciones (1) muestra las iteraciones
 
 print("Realizando entrenamiento...")
 

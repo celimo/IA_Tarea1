@@ -50,10 +50,10 @@ for j in range(3):
     for k in range(3):
         for l in range(3):
             for m in range(3):
-                dirLT = "PruebaExhaustiva/LossTrain/LT_ADAM_"+str(numNeu[j])+"NN_LR"+nomLR[k]+"_M"+nomMom[l]+"_"+str(canIter[m])+".txt"
-                dirVT = "PruebaExhaustiva/LossValid/VT_ADAM_"+str(numNeu[j])+"NN_LR"+nomLR[k]+"_M"+nomMom[l]+"_"+str(canIter[m])+".txt"
-                dirM = "PruebaExhaustiva/Model/M_ADAM_"+str(numNeu[j])+"NN_LR"+nomLR[k]+"_M"+nomMom[l]+"_"+str(canIter[m])+".h5"
-                dirW = "PruebaExhaustiva/Weights/W_ADAM_"+str(numNeu[j])+"NN_LR"+nomLR[k]+"_M"+nomMom[l]+"_"+str(canIter[m])+".h5"
+                dirLT = "PruebaExhaustiva/LossTrain/LT_RMSprop_"+str(numNeu[j])+"NN_LR"+nomLR[k]+"_M"+nomMom[l]+"_"+str(canIter[m])+".txt"
+                dirVT = "PruebaExhaustiva/LossValid/VT_RMSprop_"+str(numNeu[j])+"NN_LR"+nomLR[k]+"_M"+nomMom[l]+"_"+str(canIter[m])+".txt"
+                dirM = "PruebaExhaustiva/Model/M_RMSprop_"+str(numNeu[j])+"NN_LR"+nomLR[k]+"_M"+nomMom[l]+"_"+str(canIter[m])+".h5"
+                dirW = "PruebaExhaustiva/Weights/W_RMSprop_"+str(numNeu[j])+"NN_LR"+nomLR[k]+"_M"+nomMom[l]+"_"+str(canIter[m])+".h5"
                 print(dirLT)
                 print(dirVT)
                 print(dirM)
@@ -70,11 +70,11 @@ for j in range(3):
                 # Se va a medir la precisión de los datos
                 # El objeto optimizador indica el tipo con su tasa de aprendizaje
 
-                #optimizador = keras.optimizers.RMSprop(learning_rate=0.01,
-                #                                       momentum=0.0)
+                optimizador = keras.optimizers.RMSprop(learning_rate=cantLR[k],
+                                                       momentum=cantMom[l])
 
-                optimizador = keras.optimizers.Adam(learning_rate=cantLR[k],
-                                                    beta_1=cantMom[l])
+                #optimizador = keras.optimizers.Adam(learning_rate=cantLR[k],
+                #                                    beta_1=cantMom[l])
 
                 # Se compila el modelo
                 # optimizer: Optimizador a usar
