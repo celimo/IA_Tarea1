@@ -35,7 +35,7 @@ class_names = ['Move-F', 'Slight-RT',
 # ================ Se crea el modelo ================
 # Se trabaja con 3 capas: 1 de entrada, 1 oculta y 1 de salida
 # 4 entradas
-# 26 percetrones en la capa oculta
+# 4 percetrones en la capa oculta (este dato puede variar)
 # 4 clasificaciones en la salida
 
 model = keras.Sequential([
@@ -45,12 +45,18 @@ model = keras.Sequential([
     ])
 
 # ================ Se compila el modelo ================
-# Se trabaja con el optimizador "adaptive moment estimation (ADAM)"
+# Se trabaja con el optimizador "adaptive moment estimation (ADAM)" y con
+# el optimizador "Root Mean Square Prop (RMSprop)"
 # La función de pérdida se configura para trabajar en clasificación
 # Se va a medir la precisión de los datos
-# El objeto optimizador indica el tipo con su tasa de aprendizaje
+# El objeto optimizador indica el tipo con su tasa de aprendizaje y
+# el momento a utilizar, en el caso del Adam, el momento es el beta_1
 
-optimizador = keras.optimizers.Adam(learning_rate=0.01)
+# optimizador = keras.optimizers.RMSprop(learning_rate=0.01,
+#                                        momentum=0.9)
+
+optimizador = keras.optimizers.Adam(learning_rate=0.1,
+                                    beta_1=0.8)
 
 # Se compila el modelo
 # optimizer: Optimizador a usar
@@ -72,7 +78,9 @@ freqVal = int(iteration / CantVal)  # Frecuencia de las validaciones
 # epochs: iteraciones del entrenamiento
 # validation_split: Utiliza un 30% de los datos para validación
 # validation_freq: cada cierta freqVal de iteraciones se hace la validación
-# verbose: No se muestra todas las iteraciones del entrenamiento
+# verbose: (0) No se muestran las iteraciones (1) muestra las iteraciones
+
+print("Realizando entrenamiento...")
 
 training = model.fit(train_data, train_labels.to_numpy(),
                      epochs=iteration,
@@ -99,7 +107,7 @@ plt.ylabel("Error")
 plt.plot(x_loss, loss, label="Pérdida de entrenamiento")
 plt.plot(x_val, val_loss, label="Pérdida de validación")
 plt.legend()
-plt.show()
+plt.savefig("Graph/CurvasEntrenamiento.png")
 
 # ================ Guardar curvas de périda ================
 
@@ -125,18 +133,19 @@ pred_labels = np.argmax(prob_matrix, axis=-1)
 
 mat = confusion_matrix(pred_labels, test_labels)
 plot_confusion_matrix(conf_mat=mat,
-                      figsize=(6, 6),
+                      figsize=(9, 9),
                       class_names=class_names,
                       show_normed=True,
                       cmap=plt.cm.Blues)
-
-plt.show()
+plt.xlabel("Valor predicho")
+plt.ylabel("Valor real")
+plt.savefig("confMatrix/MatrizConf.png")
 
 # ================ Guardar los pesos del entrenamiento ================
 # Se guardan los pesos para comparar si mejoraron el resultado
 
 model.save_weights('model/weights.h5',
-                  overwrite=True)
+                   overwrite=True)
 
 # ================ Guardar el modelo utilizado ================
 # El modelo se guarda para comparar los resultados y en el cas que Sea
