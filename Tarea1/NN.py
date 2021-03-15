@@ -50,7 +50,11 @@ model = keras.Sequential([
 # Se va a medir la precisión de los datos
 # El objeto optimizador indica el tipo con su tasa de aprendizaje
 
-optimizador = keras.optimizers.Adam(learning_rate=0.01)
+#optimizador = keras.optimizers.RMSprop(learning_rate=0.01,
+#                                       momentum=0.0)
+
+optimizador = keras.optimizers.Adam(learning_rate=0.01,
+                                    beta_1=0.4)
 
 # Se compila el modelo
 # optimizer: Optimizador a usar
@@ -63,7 +67,7 @@ model.compile(optimizer=optimizador,
 
 # ================ Se entrena el modelo con los datos ================
 
-iteration = 200  # Cantidad de iteraciones para el entrenamiento
+iteration = 800  # Cantidad de iteraciones para el entrenamiento
 CantVal = int(iteration * 0.1)  # Cantidad de validaciones
 freqVal = int(iteration / CantVal)  # Frecuencia de las validaciones
 
@@ -73,6 +77,8 @@ freqVal = int(iteration / CantVal)  # Frecuencia de las validaciones
 # validation_split: Utiliza un 30% de los datos para validación
 # validation_freq: cada cierta freqVal de iteraciones se hace la validación
 # verbose: No se muestra todas las iteraciones del entrenamiento
+
+print("Realizando entrenamiento...")
 
 training = model.fit(train_data, train_labels.to_numpy(),
                      epochs=iteration,
@@ -137,7 +143,7 @@ plt.savefig("confMatrix/MatrizConf.png")
 # Se guardan los pesos para comparar si mejoraron el resultado
 
 model.save_weights('model/weights.h5',
-                  overwrite=True)
+                   overwrite=True)
 
 # ================ Guardar el modelo utilizado ================
 # El modelo se guarda para comparar los resultados y en el cas que Sea
