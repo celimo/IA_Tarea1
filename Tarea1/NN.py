@@ -53,8 +53,8 @@ model = keras.Sequential([
 #optimizador = keras.optimizers.RMSprop(learning_rate=0.01,
 #                                       momentum=0.0)
 
-optimizador = keras.optimizers.Adam(learning_rate=0.01,
-                                    beta_1=0.4)
+optimizador = keras.optimizers.Adam(learning_rate=0.1,
+                                    beta_1=0.8)
 
 # Se compila el modelo
 # optimizer: Optimizador a usar
@@ -67,7 +67,7 @@ model.compile(optimizer=optimizador,
 
 # ================ Se entrena el modelo con los datos ================
 
-iteration = 800  # Cantidad de iteraciones para el entrenamiento
+iteration = 400  # Cantidad de iteraciones para el entrenamiento
 CantVal = int(iteration * 0.1)  # Cantidad de validaciones
 freqVal = int(iteration / CantVal)  # Frecuencia de las validaciones
 
