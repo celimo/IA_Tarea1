@@ -99,7 +99,7 @@ plt.ylabel("Error")
 plt.plot(x_loss, loss, label="Pérdida de entrenamiento")
 plt.plot(x_val, val_loss, label="Pérdida de validación")
 plt.legend()
-plt.show()
+plt.savefig("Graph/CurvasEntrenamiento.png")
 
 # ================ Guardar curvas de périda ================
 
@@ -125,12 +125,13 @@ pred_labels = np.argmax(prob_matrix, axis=-1)
 
 mat = confusion_matrix(pred_labels, test_labels)
 plot_confusion_matrix(conf_mat=mat,
-                      figsize=(6, 6),
+                      figsize=(9, 9),
                       class_names=class_names,
                       show_normed=True,
                       cmap=plt.cm.Blues)
-
-plt.show()
+plt.xlabel("Valor predicho")
+plt.ylabel("Valor real")
+plt.savefig("confMatrix/MatrizConf.png")
 
 # ================ Guardar los pesos del entrenamiento ================
 # Se guardan los pesos para comparar si mejoraron el resultado
