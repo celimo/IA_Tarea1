@@ -44,7 +44,7 @@ class_3x = []
 class_3y = []
 class_3z = []
 
-sensor1 = 0.3
+sensor1 = 0.2
 
 steps = []
 for i in range(10):
@@ -86,8 +86,29 @@ ax1.scatter(class_1x, class_1y, class_1z, c='b', marker='o')
 ax1.scatter(class_2x, class_2y, class_2z, c='r', marker='o')
 ax1.scatter(class_3x, class_3y, class_3z, c='y', marker='o')
 plt.savefig("regiones/regSD_F0.png")
-plt.show()
 
+file = open("datos/region/planoClass0Cte"+str(sensor1)+".txt", "w")
+for i in range(len(class_0x)):
+    file.write(str(class_0x[i])+" "+str(class_0y[i])+" "+str(class_0z[i])+"\n")
+    if (i % 3) == 2:
+        file.write("\n")
 
+file = open("datos/region/planoClass1Cte"+str(sensor1)+".txt", "w")
+for i in range(len(class_1x)):
+    file.write(str(class_1x[i])+" "+str(class_1y[i])+" "+str(class_1z[i])+"\n")
+    if (i % 3) == 2:
+        file.write("\n")
+
+file = open("datos/region/planoClass2Cte"+str(sensor1)+".txt", "w")
+for i in range(len(class_2x)):
+    file.write(str(class_2x[i])+" "+str(class_2y[i])+" "+str(class_2z[i])+"\n")
+    if (i % 3) == 2:
+        file.write("\n")
+
+file = open("datos/region/planoClass3Cte"+str(sensor1)+".txt", "w")
+for i in range(len(class_3x)):
+    file.write(str(class_3x[i])+" "+str(class_3y[i])+" "+str(class_3z[i])+"\n")
+    if (i % 3) == 2:
+        file.write("\n")
 
 del model                        # Se borra el modelo utilizado
