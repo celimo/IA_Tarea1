@@ -131,6 +131,9 @@ file.close()
 prob_matrix = model.predict(test_data)
 pred_labels = np.argmax(prob_matrix, axis=-1)
 
+print(test_data)
+print(pred_labels)
+
 mat = confusion_matrix(pred_labels, test_labels)
 plot_confusion_matrix(conf_mat=mat,
                       figsize=(9, 9),
